@@ -1,0 +1,28 @@
+plot4 <- function(){
+data <- read.table("household_power_consumption.txt", sep = ";", stringsAsFactors = F, header = T, na.strings = "?")
+exactDate <- data[c(grep("^1/2/2007$", data$Date), grep("^2/2/2007$", data$Date)),]
+row.names(exactDate) <- NULL
+Date.Time <- paste(exactDate$Date, exactDate$Time, sep = " ")
+names(exactDate) <- gsub("_", ".", names(exactDate), fixed = T)
+dt <- data.frame(Date.Time, exactDate$Global.active.power, exactDate$Global.reactive.power, exactDate$Voltage, exactDate$Global.intensity, exactDate$Sub.metering.1, exactDate$Sub.metering.2, exactDate$Sub.metering.3)
+names(dt) <- gsub("exactDate.", "", names(dt), fixed = T)
+dt$Date.Time <- strptime(dt$Date.Time, "%d/%m/%Y %H:%M:%S")
+png(filename = "plot4.png", width = 480, height = 480)
+par(mfrow = c(2,2))
+plot(dt$Date.Time, dt$Global.active.power, type = "l", ylab = "Global Active Power", xlab = "")
+plot(dt$Date.Time, dt$Voltage, type = "l", ylab = "Voltage", xlab = "datetime")
+plot(dt$Date.Time, dt$Sub.metering.1, type = "l", ylab = "Energy sub metering", xlab = "")
+lines(dt$Date.Time, dt$Sub.metering.2, col = "red")
+lines(dt$Date.Time, dt$Sub.metering.3, col = "blue")
+legend("topright", legend = c("Sub_metering_1", "Sub_metering_2", "Sub_metering_3"), lty = c(1,1,1), lwd = c(2.5, 2.5, 2.5), col = c("black", "red", "blue"), cex = 0.8, bty = "n")
+plot(dt$Date.Time, dt$Global.reactive.power, type = "l", ylab = "Global_reactive_power", xlab = "datetime")
+dev.off()
+par(mfrow = c(2,2))
+plot(dt$Date.Time, dt$Global.active.power, type = "l", ylab = "Global Active Power", xlab = "")
+plot(dt$Date.Time, dt$Voltage, type = "l", ylab = "Voltage", xlab = "datetime")
+plot(dt$Date.Time, dt$Sub.metering.1, type = "l", ylab = "Energy sub metering", xlab = "")
+lines(dt$Date.Time, dt$Sub.metering.2, col = "red")
+lines(dt$Date.Time, dt$Sub.metering.3, col = "blue")
+legend("topright", legend = c("Sub_metering_1", "Sub_metering_2", "Sub_metering_3"), lty = c(1,1,1), lwd = c(2.5, 2.5, 2.5), col = c("black", "red", "blue"), cex = 0.8, bty = "n")
+plot(dt$Date.Time, dt$Global.reactive.power, type = "l", ylab = "Global_reactive_power", xlab = "datetime")
+}
